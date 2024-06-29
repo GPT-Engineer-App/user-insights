@@ -13,14 +13,22 @@ const Index = () => {
     setError(null);
     setUserInfo(null);
     try {
-      const response = await fetch(`https://discord.com/api/users/${userId}`, {
+      if (!userId) {
+        throw new Error("User ID cannot be empty");
+      }
+
+      const response = await fetch(`https://discord.com/api/users/${encodeURIComponent(userId)}`, {
         headers: {
           Authorization: `Bot YOUR_ACTUAL_BOT_TOKEN`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("User not found");
+        if (response.status === 404) {
+          throw new Error("User not found");
+        } else {
+          throw new Error("Failed to fetch user information");
+        }
       }
 
       const data = await response.json();
