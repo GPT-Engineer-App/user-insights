@@ -17,7 +17,7 @@ const Index = () => {
         throw new Error("User ID cannot be empty");
       }
 
-      const response = await fetch(`https://discord.com/api/users/${encodeURIComponent(userId)}`, {
+      const response = await fetch(`https://discord.com/api/v10/users/${encodeURIComponent(userId)}`, {
         headers: {
           Authorization: `Bot YOUR_ACTUAL_BOT_TOKEN`,
         },
@@ -27,13 +27,14 @@ const Index = () => {
         if (response.status === 404) {
           throw new Error("User not found");
         } else {
-          throw new Error("Failed to fetch user information");
+          throw new Error(`Failed to fetch user information: ${response.statusText}`);
         }
       }
 
       const data = await response.json();
       setUserInfo(data);
     } catch (err) {
+      console.error("Error fetching user info:", err);
       if (err.name === 'TypeError') {
         setError("Network error or invalid URL");
       } else {
