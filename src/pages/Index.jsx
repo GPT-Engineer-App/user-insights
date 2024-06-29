@@ -15,7 +15,7 @@ const Index = () => {
     try {
       const response = await fetch(`https://discord.com/api/users/${userId}`, {
         headers: {
-          Authorization: `Bot YOUR_BOT_TOKEN`,
+          Authorization: `Bot YOUR_ACTUAL_BOT_TOKEN`,
         },
       });
 
@@ -26,7 +26,11 @@ const Index = () => {
       const data = await response.json();
       setUserInfo(data);
     } catch (err) {
-      setError(err.message);
+      if (err.name === 'TypeError') {
+        setError("Network error or invalid URL");
+      } else {
+        setError(err.message);
+      }
     }
   };
 
